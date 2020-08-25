@@ -1,10 +1,13 @@
 <template>
   <div>
-    Search组件 <br>
+    <TypeNav></TypeNav>
+    <!-- Search组件 <br> -->
     <!-- params参数:---{{$route.params.keyword}}  <br/>
     query参数:---{{$route.query.keyword1}}  <br/> -->
-    params参数:---{{keyword}}  <br/>
-    query参数:---{{keyword1}}  <br/>
+    <!-- params参数:---{{keyword}}  <br/>
+    query参数:---{{keyword1}}  <br/> -->
+    
+    
   </div>
 </template>
     
