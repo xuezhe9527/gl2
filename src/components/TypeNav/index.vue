@@ -79,10 +79,11 @@ export default {
   mounted() {
     // //由于TypeNav组件时嵌套在home和search组件内部得，故home和search切换得时候，typaNav也会销毁并重mouted，多发一次请求，所以放到APP里面去请求
     // this.getCategoryList();
-    console.log(this.$route.path);
+    // console.log(this.$route.path);
     if (this.$route.path !== "/home") {
       this.isShow = false;
     }
+    console.log(this.isShow);
   },
   methods: {
     //获取三级分类导航列表
@@ -128,6 +129,12 @@ export default {
           query.category3Id = category3id;
         }
         location.query = query;
+
+        //合并params参数
+        let {params} = this.$route
+        if(params){
+          location.params = params
+        }
 
         this.$router.push(location);
       }
