@@ -8,7 +8,7 @@ import * as API from '@/api'
 import SlideLoop from '@/components/SlideLoop'
 
 
-console.log(API);
+// console.log(API);
 // console.log(API.reqBannerList());
 // API.reqFloorList()
 
@@ -19,6 +19,9 @@ Vue.component("SlideLoop",SlideLoop)
 Vue.config.productionTip = false
 
 new Vue({
+  beforeCreate() {
+    Vue.prototype.$bus = this
+  },
   render: h => h(App),
   router,
   store

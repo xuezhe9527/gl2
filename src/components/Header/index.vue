@@ -38,7 +38,7 @@
       </h1>
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input type="text" id="autocomplete" class="input-error input-xxlarge"  v-model="keyword"/>
+          <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
           <button class="sui-btn btn-xlarge btn-danger" type="button" @click="toSearch">搜索</button>
         </form>
       </div>
@@ -49,13 +49,17 @@
 <script>
 export default {
   name: "Header",
-  data(){
-    return{
-      keyword:''
-    }
+  data() {
+    return {
+      keyword: "",
+    };
   },
-  methods:{
-    toSearch(){
+  mounted() {
+    //页面挂在完成后，绑定一个全局事件
+    this.$bus.$on("clearKeyword", this.clearKeyword);
+  },
+  methods: {
+    toSearch() {
       // this.$router.push(`/search/${this.keyword}?keyword1=${this.keyword.toUpperCase()}`)
 
       // this.$router.push({
@@ -68,20 +72,22 @@ export default {
       //   }
       // })
       let location = {
-        name:'search',
-        params:{
-          keyword:this.keyword || undefined
-        }
-      }
+        name: "search",
+        params: {
+          keyword: this.keyword || undefined,
+        },
+      };
       //合并query参数
-      let {query} = this.$route
-      if(query){
-        location.query = query
+      let { query } = this.$route;
+      if (query) {
+        location.query = query;
       }
-      this.$router.push(location)
-      
-    }
-  }
+      this.$router.push(location);
+    },
+    clearKeyword() {
+      this.keyword = "";
+    },
+  },
 };
 </script>
     

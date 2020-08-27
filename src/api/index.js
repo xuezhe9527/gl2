@@ -12,6 +12,10 @@ export const reqCategoryList = () => Ajax({
 export const reqBannerList = () =>mockAjax.get('/banner')  //baseURL里面已经有'/mock'，所以这里只需要写'/banner'
 export const reqFloorList = () =>mockAjax.get('/floor')
 
+//请求商品搜索列表
+export const reqGoodsList = (searchParams) => Ajax.post('/list',searchParams)
+
+
 
 // console.log(111);
 // reqBannerList()

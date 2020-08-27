@@ -81,9 +81,10 @@ export default {
     // this.getCategoryList();
     // console.log(this.$route.path);
     if (this.$route.path !== "/home") {
+      // if (this.$route.path === "/search") {
       this.isShow = false;
     }
-    console.log(this.isShow);
+    // console.log(this.isShow);
   },
   methods: {
     //获取三级分类导航列表
@@ -108,7 +109,9 @@ export default {
     ),
     moveOut() {
       this.currentIndex = -1;
-      this.isShow = false;
+      if (this.$route.path !== "/home") {
+        this.isShow = false;
+      }
     },
     //跳转搜索页
     toSearch(event) {
@@ -123,7 +126,7 @@ export default {
         query.categoryName = categoryname;
         if (category1id) {
           query.category1Id = category1id;
-        } else if (category2Id) {
+        } else if (category2id) {
           query.category2Id = category2id;
         } else {
           query.category3Id = category3id;
@@ -131,11 +134,10 @@ export default {
         location.query = query;
 
         //合并params参数
-        let {params} = this.$route
-        if(params){
-          location.params = params
+        let { params } = this.$route;
+        if (params) {
+          location.params = params;
         }
-
         this.$router.push(location);
       }
     },
@@ -157,7 +159,7 @@ export default {
     margin: 0 auto;
     display: flex;
     position: relative;
-    
+
     .all {
       width: 210px;
       height: 45px;
@@ -189,17 +191,17 @@ export default {
       background: #fafafa;
       z-index: 999;
       //左侧导航栏得过渡动画
-      &.show-enter{
-          opacity: 0;
-          height: 0;
+      &.show-enter {
+        opacity: 0;
+        height: 0;
       }
-      &.show-enter-to{
-          height: 500px;
-          opacity: 1;
-          background: pink;
+      &.show-enter-to {
+        height: 500px;
+        opacity: 1;
+        background: pink;
       }
-      &.show-enter-active{
-          transition: all 5s;
+      &.show-enter-active {
+        transition: all 5s;
       }
 
       .all-sort-list2 {
