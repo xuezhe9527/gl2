@@ -6,6 +6,7 @@ import store from '@/store'
 import '@/mock/mockServer'
 import * as API from '@/api'
 import SlideLoop from '@/components/SlideLoop'
+import Pagination from '@/components/Pagination'
 
 
 // console.log(API);
@@ -15,6 +16,7 @@ import SlideLoop from '@/components/SlideLoop'
 //全局注册TypeNav组件
 Vue.component("TypeNav",TypeNav)
 Vue.component("SlideLoop",SlideLoop)
+Vue.component("Pagination",Pagination)
 
 Vue.config.productionTip = false
 

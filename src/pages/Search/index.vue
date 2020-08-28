@@ -11,7 +11,8 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x" v-if="searchParams.categoryName">{{searchParams.categoryName}}
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{searchParams.categoryName}}
               <i @click="removeCategoryName">x</i>
             </li>
             <li class="with-x" v-if="searchParams.keyword">
@@ -23,23 +24,29 @@
               <i @click="removeTrademark">×</i>
             </li>
             <li class="with-x" v-for="(prop, index) in searchParams.props" :key="index">
-                {{prop.split(':')[1]}}
+              {{prop.split(':')[1]}}
               <i @click="removeProp(index)">×</i>
             </li>
-            
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @searchForTrademark="searchForTrademark" @searchForAttr="searchForAttr"/>
+        <SearchSelector @searchForTrademark="searchForTrademark" @searchForAttr="searchForAttr" />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:sortFlag==='1'}">
+                  <a href="javascript:;" @click="sortGoods('1')">
+                    综合
+                    <i
+                      class="iconfont"
+                      :class="{'iconarrow-up-bold':sortType==='asc','iconarrow-down-bold':sortType==='desc'}"
+                      v-if="sortFlag==='1'"
+                    ></i>
+                  </a>
                 </li>
                 <li>
                   <a href="#">销量</a>
@@ -50,11 +57,15 @@
                 <li>
                   <a href="#">评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:sortFlag==='2'}">
+                  <a href="javascript:;" @click="sortGoods('2')">
+                    价格
+                    <i
+                      class="iconfont"
+                      :class="{'iconarrow-up-bold':sortType==='asc','iconarrow-down-bold':sortType==='desc'}"
+                      v-if="sortFlag==='2'"
+                    ></i>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -75,13 +86,9 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a
-                      target="_blank"
-                      href="item.html"
-                      :title="goods.title"
-                    >
+                    <a target="_blank" href="item.html" :title="goods.title">
                       <!-- Apple苹果iPhone
-                      6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699) -->
+                      6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)-->
                       {{goods.title}}
                     </a>
                   </div>
@@ -101,42 +108,17 @@
                   </div>
                 </div>
               </li>
-              
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted">
-                  <span>...</span>
-                </li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div>
-                <span>共10页&nbsp;</span>
-              </div>
-            </div>
-          </div>
+          <!-- 加这个div只是为了包裹分页组件使其居中 -->
+          <div style="display:flex;justify-content:center;align-items:center"> 
+            <Pagination :currentPageNum="searchParams.pageNo" 
+                      :pageSize="searchParams.pageSize"
+                      :total="goodsListInfo.total"
+                      :continueNum="5"
+                      :changePage="changePage"/>  
+          </div>     
+
         </div>
       </div>
     </div>
@@ -145,7 +127,7 @@
 
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "Search",
@@ -157,7 +139,7 @@ export default {
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "1:desc",
+        order: "2:desc",
         pageNo: 1,
         pageSize: 10,
         props: [],
@@ -167,83 +149,122 @@ export default {
   },
   // 在页面挂载完成前准备好要发送得参数数据
   beforeMount() {
-    this.handleSearchParams()
+    this.handleSearchParams();
   },
   mounted() {
-    this.getGoodsListInfo()
+    this.getGoodsListInfo();
   },
-  methods:{
+  methods: {
     //获取商品分类信息
-    getGoodsListInfo(){
-      this.$store.dispatch('getGoodsListInfo',this.searchParams)
+    getGoodsListInfo() {
+      this.$store.dispatch("getGoodsListInfo", this.searchParams);
     },
     //处理获取商品分类前的请求参数
-    handleSearchParams(){
-      let {keyword} = this.$route.params
-      console.log("搜索页面keyword："+keyword);
-      let{category1Id,category2Id,category3Id,categoryName} = this.$route.query
+    handleSearchParams() {
+      let { keyword } = this.$route.params;
+      let {
+        category1Id,
+        category2Id,
+        category3Id,
+        categoryName,
+      } = this.$route.query;
       let searchParams1 = {
         ...this.searchParams,
         keyword,
         category1Id,
         category2Id,
         category3Id,
-        categoryName
-      }
-      Object.keys(searchParams1).forEach(item=>{
-        if(!searchParams1[item]){
-          delete searchParams1[item]
+        categoryName,
+      };
+      Object.keys(searchParams1).forEach((item) => {
+        if (!searchParams1[item]) {
+          delete searchParams1[item];
         }
-      })
-      this.searchParams = searchParams1
+      });
+      this.searchParams = searchParams1;
     },
     //移除CategoryName后的重新发起请求
-    removeCategoryName(){
-      this.searchParams.categoryName = ''
+    removeCategoryName() {
+      this.searchParams.categoryName = "";
       // this.getGoodsListInfo() //不能这样请求，因为浏览器的地址栏没有发生变化（即路由）
-      this.$router.push({name:'search',params:this.$route.params})
+      // this.$router.push({name:'search',params:this.$route.params})
+
+      //移除CategoryName后，应该重新从第一页开始搜索,（结合分页逻辑）
+      this.searchParams.pageNo = 1
+      this.$router.replace({ name: "search", params: this.$route.params });
     },
     //移除关键字
-    removeKeyword(){
-      this.searchParams.keyword = ''
-      
-      //这里还需要清空header的搜索框
-      this.$bus.$emit('clearKeyword')
+    removeKeyword() {
+      this.searchParams.keyword = "";
 
-      this.$router.push({name:'search',query:this.$route.query})
+      //这里还需要清空header的搜索框
+      this.$bus.$emit("clearKeyword");
+
+      //移除关键字后，应该重新从第一页开始搜索
+      this.searchParams.pageNo = 1
+      // this.$router.push({name:'search',query:this.$route.query})
+      this.$router.replace({ name: "search", query: this.$route.query });
     },
     //移除品牌后
-    removeTrademark(){
-      this.searchParams.trademark = ''
-      this.getGoodsListInfo() //trade和属性都可以直接调用方法重新查詢数据，因为他们没有修改路由
+    removeTrademark() {
+      this.searchParams.trademark = "";
+      this.getGoodsListInfo(); //trade和属性都可以直接调用方法重新查詢数据，因为他们没有修改路由
     },
     //移除某个属性
-    removeProp(index){
-      this.searchParams.props.splice(index,1)
-      this.getGoodsListInfo()
+    removeProp(index) {
+      this.searchParams.props.splice(index, 1);
+      this.getGoodsListInfo();
     },
     //选择一个品牌
-    searchForTrademark(trademark){
-      this.searchParams.trademark = `${trademark.tmId}:${trademark.trName}`
-      this.getGoodsListInfo()
+    searchForTrademark(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.trName}`;
+      this.getGoodsListInfo();
     },
     //选择一个属性
-    searchForAttr(attr,attrValue){
+    searchForAttr(attr, attrValue) {
       //  "属性ID:属性值:属性名"
-      this.searchParams.props.push(`${attr.attrId}:${attrValue}:${attr.attrName}`)
+      this.searchParams.props.push(
+        `${attr.attrId}:${attrValue}:${attr.attrName}`
+      );
+      this.getGoodsListInfo();
+    },
+    //点击切换排序
+    sortGoods(sortFlag) {
+      let originFlag = this.sortFlag;
+      let originType = this.sortType;
+      let newOrder;
+      if (sortFlag === originFlag) {
+        newOrder = `${originFlag}:${originType === "desc" ? "asc" : "desc"}`;
+      } else {
+        newOrder = `${sortFlag}:desc`;
+      }
+
+      this.searchParams.order = newOrder;
+      this.getGoodsListInfo();
+    },
+    //分页时切换页码
+    changePage(page){
+      this.searchParams.pageNo = page
       this.getGoodsListInfo()
     }
-
-
   },
-  watch:{
-    $route(){
-      this.handleSearchParams()
-      this.getGoodsListInfo()
-    }
+  watch: {
+    $route() {
+      this.handleSearchParams();
+      this.getGoodsListInfo();
+    },
   },
-  computed:{
-    ...mapGetters(['goodsList'])
+  computed: {
+    ...mapGetters(["goodsList"]),
+    ...mapState({
+      goodsListInfo:state=>state.search.goodsListInfo
+    }),
+    sortFlag() {
+      return this.searchParams.order.split(":")[0];
+    },
+    sortType() {
+      return this.searchParams.order.split(":")[1];
+    },
   },
   components: {
     SearchSelector,

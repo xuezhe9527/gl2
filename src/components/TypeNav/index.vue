@@ -138,7 +138,13 @@ export default {
         if (params) {
           location.params = params;
         }
-        this.$router.push(location);
+        // this.$router.push(location);
+        // 判断是否是由home跳转到search，只有这种情况才push，否则replace
+        if (this.$route.path !== "/home") {
+          this.$router.replace(location);
+        } else {
+          this.$router.push(location);
+        }
       }
     },
   },
