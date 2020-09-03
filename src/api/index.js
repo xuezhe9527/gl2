@@ -9,14 +9,17 @@ export const reqCategoryList = () => Ajax({
 })
 
 // 获取轮播图图片
-export const reqBannerList = () =>mockAjax.get('/banner')  //baseURL里面已经有'/mock'，所以这里只需要写'/banner'
-export const reqFloorList = () =>mockAjax.get('/floor')
+export const reqBannerList = () => mockAjax.get('/banner')  //baseURL里面已经有'/mock'，所以这里只需要写'/banner'
+export const reqFloorList = () => mockAjax.get('/floor')
 
 //请求商品搜索列表
-export const reqGoodsList = (searchParams) => Ajax.post('/list',searchParams)
+export const reqGoodsList = (searchParams) => Ajax.post('/list', searchParams)
 
+//请求某个商品的详情信息
+export const reqGoodsDetailInfo = (skuId) => Ajax.get(`/item/${skuId}`)
 
-
+//请求添加购物车 /api/cart/addToCart/{ skuId }/{ skuNum }  post
+export const reqAddOrUpdateToCart = (skuId,skuNum) => Ajax.post(`/cart/addToCart/${ skuId }/${ skuNum }`)
 // console.log(111);
 // reqBannerList()
 // reqFloorList()
