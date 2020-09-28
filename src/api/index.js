@@ -20,6 +20,9 @@ export const reqGoodsDetailInfo = (skuId) => Ajax.get(`/item/${skuId}`)
 
 //请求添加购物车 /api/cart/addToCart/{ skuId }/{ skuNum }  post
 export const reqAddOrUpdateToCart = (skuId,skuNum) => Ajax.post(`/cart/addToCart/${ skuId }/${ skuNum }`)
+
+//查詢所有的购物车列表 /api/cart/cartList  get
+export const reqShopCartList = ()=> Ajax.get('/cart/cartList')
 // console.log(111);
 // reqBannerList()
 // reqFloorList()

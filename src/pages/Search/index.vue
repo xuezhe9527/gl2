@@ -119,7 +119,7 @@
                       :pageSize="searchParams.pageSize"
                       :total="goodsListInfo.total"
                       :continueNum="5"
-                      :changePage="changePage"/>  
+                      @changePage="changePage"/>  
           </div>     
 
         </div>
@@ -247,6 +247,7 @@ export default {
     },
     //分页时切换页码
     changePage(page){
+      // console.log("进来了")
       this.searchParams.pageNo = page
       this.getGoodsListInfo()
     }

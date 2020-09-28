@@ -1,10 +1,10 @@
 <template>
   <div class="pagination">
-    <button :disabled="currentPageNum===1" @click="this.$emit('changePage',currentPageNum-1)">上一页</button>
+    <button :disabled="currentPageNum===1" @click="$emit('changePage',currentPageNum-1)">上一页</button>
     <button
       v-if="startEnd.start>1"
       :class="{active:currentPageNum===1}"
-      @click="this.$emit('changePage',1)"
+      @click="$emit('changePage',1)"
     >1</button>
     <button v-if="startEnd.start>2">···</button>
 
@@ -13,18 +13,18 @@
       :key="page"
       v-if="page>=startEnd.start"
       :class="{active:currentPageNum===page}"
-      @click="this.$emit('changePage',page)"
+      @click="$emit('changePage',page)"
     >{{page}}</button>
 
     <button v-if="startEnd.end<totalPage-1">···</button>
     <button
       v-if="startEnd.end<totalPage"
       :class="{active:currentPageNum===totalPage}"
-      @click="this.$emit('changePage',totalPage)"
+      @click="$emit('changePage',totalPage)"
     >{{totalPage}}</button>
     <button
       :disabled="currentPageNum===totalPage"
-      @click="this.$emit('changePage',currentPageNum+1)"
+      @click="$emit('changePage',currentPageNum+1)"
     >下一页</button>
 
     <button style="margin-left: 30px">共 {{total}} 条</button>

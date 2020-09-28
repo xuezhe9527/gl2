@@ -367,10 +367,10 @@ export default {
       try {
         // console.log(111);
         const result = await this.$store.dispatch("addOrUpdateToCart", {
-          // skuId: this.skuInfo.id,
-          // skuNum: this.skuNum,
-          skuId: 35,
-          skuNum: 2
+          skuId: this.skuInfo.id,
+          skuNum: this.skuNum,
+          // skuId: 35,
+          // skuNum: 2
         });
         alert(result);
 
