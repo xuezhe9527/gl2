@@ -1,7 +1,7 @@
-import { reqAddOrUpdateToCart,reqShopCartList } from '@/api'
+import { reqAddOrUpdateToCart,reqShopCartList,reqChangeOneShopCartChecked } from '@/api'
 
 const state = {
-  shopCartList:{}
+  shopCartList:[]
 }
 
 const mutations = {
@@ -28,6 +28,28 @@ const actions = {
     if(result.code===200){
       commit("RECEIVESHOPCARTLIST",result.data)
     }
+  },
+
+  //改变一个商品的购物车的选中状态
+  async changeOneShopCartChecked({commit},{skuId,isChecked}){
+    const result = await reqChangeOneShopCartChecked(skuId,isChecked)
+    if(result.code === 200){
+      return "购物车选中状态修改成功"
+    }else{
+      return Promise.reject(new Error("购物车选中状态修改失败"))
+    }
+  },
+  //修改全部商品的选中状态
+   changeAllShopCartChecked({commit,state,dispatch},val){
+    let promises = []
+    state.shopCartList.forEach(item => {
+      // console.log('vuex里面:',val);
+      if(item.isChecked === val) return
+      console.log(item);
+      let promise =  dispatch('changeOneShopCartChecked',{skuId:item.skuId,isChecked:val})
+      promises.push(promise)
+    });
+    return Promise.all(promises)
   }
 }
 

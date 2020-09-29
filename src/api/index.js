@@ -23,6 +23,13 @@ export const reqAddOrUpdateToCart = (skuId,skuNum) => Ajax.post(`/cart/addToCart
 
 //查詢所有的购物车列表 /api/cart/cartList  get
 export const reqShopCartList = ()=> Ajax.get('/cart/cartList')
+
+//修改单个购物车的选中状态  /api/cart/checkCart/{skuID}/{isChecked}  get
+export const reqChangeOneShopCartChecked = (skuID,isChecked) => Ajax.get(`/cart/checkCart/${skuID}/${isChecked}`)
+
+//点击全选修改所有购物车的选中状态是通过多次重复使用reqChangeOneShopCartChecked（修改单个购物车的选中状态）实现的
+
+
 // console.log(111);
 // reqBannerList()
 // reqFloorList()
