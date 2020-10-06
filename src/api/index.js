@@ -29,6 +29,20 @@ export const reqChangeOneShopCartChecked = (skuID,isChecked) => Ajax.get(`/cart/
 
 //点击全选修改所有购物车的选中状态是通过多次重复使用reqChangeOneShopCartChecked（修改单个购物车的选中状态）实现的
 
+////删除购物车单个商品 /api/cart/deleteCart/{skuId}  delete
+export const reqDeleteOneShopCart = (skuId) => Ajax.delete(`/cart/deleteCart/${skuId}`)
+
+//注册用户信息 /api/user/passport/register   post
+export const reqRegister = (userInfo) => Ajax.post(`/user/passport/register`,userInfo)
+
+//用户登录 /api/user/passport/login post
+export const reqLogin = (userInfo) => Ajax.post(`/user/passport/login`,userInfo)
+
+//用户退出 /api/user/passport/logout  get
+export const reqLogout = () =>Ajax.get('/user/passport/logout')
+
+
+
 
 // console.log(111);
 // reqBannerList()

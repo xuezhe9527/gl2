@@ -41,7 +41,12 @@
             }}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins" @click="updateCartNum(shopcart,-1)">-</a>
+            <a
+              href="javascript:void(0)"
+              class="mins"
+              @click="updateCartNum(shopcart, -1)"
+              >-</a
+            >
             <input
               autocomplete="off"
               type="text"
@@ -49,7 +54,12 @@
               minnum="1"
               class="itxt"
             />
-            <a href="javascript:void(0)" class="plus" @click="updateCartNum(shopcart,1)">+</a>
+            <a
+              href="javascript:void(0)"
+              class="plus"
+              @click="updateCartNum(shopcart, 1)"
+              >+</a
+            >
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{
@@ -57,7 +67,12 @@
             }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a
+              href="#none"
+              class="sindelet"
+              @click="deleteOneShopCart(shopcart.skuId)"
+              >删除</a
+            >
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -71,7 +86,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a href="javascript:;" @click="deleteCheckedShopCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -86,7 +101,8 @@
           <i class="summoney">{{ totalMoney }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <!-- <a class="sum-btn" href="###" target="_blank">结算</a> -->
+          <router-link to="/trade" class="sum-btn">结算</router-link>
         </div>
       </div>
     </div>
@@ -120,15 +136,36 @@ export default {
       }
     },
     //点击+- 修改购物车的数量
-    async updateCartNum(shopcart,changeNum){
+    async updateCartNum(shopcart, changeNum) {
       try {
-        await this.$store.dispatch('addOrUpdateToCart',{ skuId:shopcart.skuId, skuNum:changeNum })
-         this.getShopCartList()
+        await this.$store.dispatch("addOrUpdateToCart", {
+          skuId: shopcart.skuId,
+          skuNum: changeNum,
+        });
+        this.getShopCartList();
       } catch (error) {
         console.log(error.message);
       }
-      
-    }
+    },
+    //删除单个购物车
+    async deleteOneShopCart(skuId) {
+      try {
+        await this.$store.dispatch("deleteOneShopCart", skuId);
+        this.getShopCartList();
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+    //删除选中的购物车
+    async deleteCheckedShopCart(){
+      try {
+          await this.$store.dispatch('deleteCheckedShopCart')
+          this.getShopCartList()
+      } catch (error) {
+          console.log(error.message);
+      }
+    },
+
   },
 
   computed: {
@@ -161,7 +198,7 @@ export default {
       return this.shopCartList.reduce((pre, item) => {
         if (item.isChecked) {
           pre += item.skuNum;
-        }      
+        }
         return pre;
       }, 0);
     },
@@ -171,7 +208,7 @@ export default {
         if (item.isChecked) {
           pre += item.skuNum * item.skuPrice;
         }
-         console.log("当前价格"+pre);
+        console.log("当前价格" + pre);
         return pre;
       }, 0);
     },
