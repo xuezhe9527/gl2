@@ -7,6 +7,12 @@ import '@/mock/mockServer'
 import * as API from '@/api'
 import SlideLoop from '@/components/SlideLoop'
 import Pagination from '@/components/Pagination'
+import {MessageBox,Message} from 'element-ui'
+
+
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$message = Message;
 
 
 // console.log(API);
@@ -22,7 +28,8 @@ Vue.config.productionTip = false
 
 new Vue({
   beforeCreate() {
-    Vue.prototype.$bus = this
+    Vue.prototype.$bus = this,
+    Vue.prototype.$API = API
   },
   render: h => h(App),
   router,
