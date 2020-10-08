@@ -1,4 +1,5 @@
-import Home from '@/pages/Home'
+const Home = () => import('@/pages/Home')  //路由懒加载：优势：1单独打包，2按需加载
+// import Home from '@/pages/Home'
 import Login  from '@/pages/Login'
 import Register from '@/pages/Register'
 import Search from '@/pages/Search'
@@ -9,8 +10,29 @@ import Trade from '@/pages/Trade'
 import Pay from '@/pages/Pay'
 import PaySuccess from '@/pages/PaySuccess'
 import Center from '@/pages/Center'
+import MyOrder from '@/pages/Center/MyOrder'
+import GroupOrder from '@/pages/Center/GroupOrder'
+import store from '@/store'
 export default 
 [
+  {
+    path:'/center',
+    component:Center,
+    children:[
+      {
+        path:'myorder',
+        component:MyOrder,
+      },
+      {
+        path:'grouporder',
+        component:GroupOrder,
+      },
+      {
+        path:'',
+        redirect:'myorder'
+      }
+    ]
+  },
   {
     path:'/home',
     component:Home
@@ -20,6 +42,14 @@ export default
     component:Login,
     meta:{
       isHideFooter:true
+    },
+    //未登录的用户才可以进入登陆页面
+    beforeEnter: (to, from, next) => {
+      if(!store.state.user.userInfo.name){
+        next()
+      }else{
+        next('/')
+      }
     }
   },
   {

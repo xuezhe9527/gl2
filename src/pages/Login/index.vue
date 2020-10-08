@@ -93,9 +93,15 @@ export default {
         let userInfo = { mobile, password };
         try {
           const result = await this.$store.dispatch("toLogin", userInfo);
-          console.log("页面", result);
-          alert(result);
-          this.$router.push("/home");
+          
+          let redirectPath = this.$route.query.redirect
+          if(redirectPath){
+            this.$router.push(redirectPath)
+          }else{
+            alert(result);
+            this.$router.push("/home");
+          }
+         
         } catch (error) {
           console.log(error.message);
         }

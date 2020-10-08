@@ -53,6 +53,9 @@ export const reqOrderInfo = (orderId) =>Ajax.get(`/payment/weixin/createNative/$
 //查詢订单支付状态 /api/payment/weixin/queryPayStatus/{orderId}
 export const reqPayStatus = (orderId) =>Ajax.get(`/payment/weixin/queryPayStatus/${orderId}`)
 
+//请求获取订单信息 /api/order/auth/{page}/{limit}    GET
+export const reqMyOrder = (page,limit) =>Ajax.get(`/order/auth/${page}/${limit}`)
+
 
 // console.log(111);
 // reqBannerList()

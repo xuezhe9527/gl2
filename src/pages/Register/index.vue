@@ -12,38 +12,77 @@
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="mobile" />
-        <span class="error-msg">错误提示信息</span>
+        <input
+          v-model="mobile"
+          placeholder="请输入你的手机号"
+          name="phone"
+          v-validate="{ required: true, regex: /^1\d{10}$/ }"
+          :class="{ invalid: errors.has('phone') }"
+        />
+        <span class="error-msg">{{ errors.first("phone") }}</span>
+        <!-- <input type="text" placeholder="请输入你的手机号" v-model="mobile" />
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" v-model="code" />
+        <input
+          placeholder="请输入你的验证码"
+          v-model="code"
+          name="code"
+          v-validate="{ required: true, regex: /^\d{4}$/ }"
+          :class="{ invalid: errors.has('code') }"
+        />
         <img
           ref="code"
-          src="http://182.92.128.115/api/user/passport/code"
+          
           alt="code"
           @click="changeCode"
         />
-        <span class="error-msg">错误提示信息</span>
+        <!-- src="http://182.92.128.115/api/user/passport/code" -->
+        <span class="error-msg">{{ errors.first("code") }}</span>
+        <!-- <input type="text" placeholder="请输入验证码" v-model="code" /> -->
+        <!-- <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="content">
         <label>登录密码:</label>
         <input
+          v-model="password"
+          placeholder="请输入你的密码"
+          name="password"
+          v-validate="{ required: true, regex: /\w{6,}/ }"
+          :class="{ invalid: errors.has('password') }"
+        />
+        <span class="error-msg">{{ errors.first("password") }}</span>
+        <!-- <input
           type="text"
           placeholder="请输入你的登录密码"
           v-model="password"
         />
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码" v-model="password2" />
-        <span class="error-msg">错误提示信息</span>
+        <input
+          v-model="password2"
+          placeholder="请再次输入您的密码"
+          name="password2"
+          v-validate="{ required: true, is: password }"
+          :class="{ invalid: errors.has('password2') }"
+        />
+        <span class="error-msg">{{ errors.first("password2") }}</span>
+        <!-- <input type="text" placeholder="请输入确认密码" v-model="password2" />
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" />
+        <input
+          name="isCheck"
+          type="checkbox"
+          v-model="isCheck"
+          v-validate="{ agree: true }"
+        />
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first("isCheck") }}</span>
+        <!-- <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="btn">
         <button @click="register">完成注册</button>
@@ -77,7 +116,11 @@ export default {
       code: "",
       password: "",
       password2: "",
+      isCheck:false
     };
+  },
+  mounted() {
+    this.$refs.code.src = '/api/user/passport/code'
   },
   methods: {
     //点击修改二维码
@@ -86,18 +129,25 @@ export default {
     },
     //注册
     async register() {
-      let { mobile, code, password, password2 } = this;
-      if (mobile && code && password && password2 && password === password2) {
-        let userInfo = { mobile,  code, password}
+      const success = await this.$validator.validateAll(); //表单整体验证
+      console.log("success结果", success);
+      if (success) {
+        let { mobile, code, password, password2 } = this;
+        // if (mobile && code && password && password2 && password === password2) {
+        let userInfo = { mobile, code, password };
         console.log(userInfo);
         try {
-           await this.$store.dispatch('toRegister',userInfo)
-           alert("注册成功，自动跳转至登录页面")
-           this.$router.push('/login')
+          const result = await this.$store.dispatch("toRegister", userInfo);
+          console.log('注册结果',result);
+          if(result){
+            alert("注册成功，自动跳转至登录页面");
+            this.$router.push("/login");
+          }
+          
         } catch (error) {
-            console.log(error.message);
+          console.log(error.message);
         }
-        
+        // }
       }
     },
   },

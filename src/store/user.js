@@ -21,7 +21,7 @@ const actions = {
     if(result.code ===200){   
       return '注册成功'
     }else{
-      Promise.reject(new Error('注册失败'))
+      return Promise.reject(new Error('注册失败'))
     }
   },
   //用户登录
